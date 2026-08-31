@@ -1,0 +1,35 @@
+networks:
+  dev-network:
+    name: dev-network
+
+services:
+  pg-db:
+    container_name: pg_db
+    image: postgres:17.10
+    # image: postgis/postgis:17-master
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=admin-password
+      - POSTGRES_DB=postgres
+    networks:
+      - dev-network
+    ports:
+      - 5432:5432
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=dev@localhost
+      - PGADMIN_DEFAULT_PASSWORD=password
+      - PGADMIN_LISTEN_ADDRESS=0.0.0.0
+      - PGADMIN_LISTEN_PORT=5050
+    networks:
+      - dev-network
+    ports:
+      - 5050:5050
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+      - ./pgadmin:/var/lib/pgadmin
