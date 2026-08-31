@@ -1,0 +1,31 @@
+networks:
+  dev-network:
+    name: dev-network
+
+services:
+  mysql-db:
+    container_name: mysql_db
+    image: mysql:9.7.2
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin-password
+      - MYSQL_DATABASE=dev
+      - MYSQL_USER=adm_user
+      - MYSQL_PASSWORD=adm-password
+    networks:
+      - dev-network
+    ports:
+      - 3306:3306
+
+  mysql-workbench:
+    container_name: mysql_wb
+    image: linuxserver/mysql-workbench:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    networks:
+      - dev-network
+    ports:
+      - 3000:3000
+      - 3001:3001
